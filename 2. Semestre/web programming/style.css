@@ -1,0 +1,31 @@
+body{
+    background-color: rgb(136, 80, 32);
+}
+
+.generic{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card{
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    margin: 10px;
+}
+
+.card-content{
+    margin: 5px;
+}
+
+.cabecalho{
+    background-color: rgb(84, 46, 18);
+}
+
+.img{
+    width: 400px;
+    height: 450px;
+    border-radius: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
