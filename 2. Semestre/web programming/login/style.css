@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(2,30,54);
+    background-color: rgb(88, 91, 94);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,12 +17,6 @@ body {
     align-items: center;
     justify-content: center;
     width: 20%;
-}
-
-.caixa{
-    display: flex;
-    flex-direction: center;
-    align-items: center;
 }
 
 .inpt{
