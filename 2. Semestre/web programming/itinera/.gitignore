@@ -1,0 +1,3 @@
+# Senha, host e caminho do certificado do TiDB.
+# O exemplo versionado é config/config.example.php.
+server/config/config.local.php

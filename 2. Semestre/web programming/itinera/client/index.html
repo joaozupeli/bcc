@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Itinera</title>
+  <!-- A página pede JSON para server/api e redesenha a tela. -->
+  <script>
+    // Aplica o tema antes de pintar a página, para não piscar claro e depois escuro.
+    (function () {
+      try {
+        var tema = localStorage.getItem('itinera-tema');
+        if (tema !== 'claro' && tema !== 'escuro') {
+          tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        }
+        document.documentElement.setAttribute('data-tema', tema);
+      } catch (e) {
+        document.documentElement.setAttribute('data-tema', 'claro');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="largura topo-conteudo">
+      <div class="marca">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+            <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"></path>
+          </svg>
+        </span>
+        <div>
+          <h1 class="nome">Itinera</h1>
+          <p class="subtitulo">Roteiro, gastos e horários em um só lugar</p>
+        </div>
+      </div>
+      <button type="button" id="btn-tema" class="btn btn-fantasma no-print" aria-pressed="false">Tema escuro</button>
+    </div>
+  </header>
+
+  <main id="app" class="largura">
+    <section id="tela-lista">
+      <div class="barra-lista no-print">
+        <div class="campo campo-busca">
+          <label for="busca">Buscar por destino</label>
+          <input id="busca" type="search" placeholder="Ex.: Gramado" autocomplete="off">
+        </div>
+        <button type="button" class="btn btn-primario" id="btn-nova-viagem">Nova viagem</button>
+      </div>
+      <div id="lista-viagens"></div>
+    </section>
+
+    <section id="tela-viagem" hidden>
+      <div id="viagem-conteudo"></div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-fundo" data-fechar-modal></div>
+    <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+      <div class="modal-topo">
+        <h2 id="modal-titulo"></h2>
+        <button type="button" class="btn-icone" data-fechar-modal aria-label="Fechar">×</button>
+      </div>
+      <div id="modal-corpo"></div>
+      <div id="modal-rodape" class="modal-rodape"></div>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <noscript><p class="vazio">O Itinera precisa de JavaScript para funcionar.</p></noscript>
+
+  <script src="js/api.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
