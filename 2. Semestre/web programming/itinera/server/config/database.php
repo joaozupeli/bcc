@@ -42,16 +42,11 @@ function obter_conexao(): PDO
         throw new RuntimeException('A porta do banco está inválida. No TiDB Cloud use 4000.');
     }
 
-    $certificado = trim((string)($config['ssl_ca'] ?? ''));
-    if ($certificado === '') {
-        throw new RuntimeException(
-            'O TiDB exige SSL. Preencha ssl_ca em server/config/config.local.php com o caminho do certificado mostrado na janela Connect.'
-        );
-    }
+    $certificado = caminho_certificado($config);
 
     if (!is_readable($certificado)) {
         throw new RuntimeException(
-            'Não encontrei o certificado CA. Ajuste ssl_ca em server/config/config.local.php. Caminho informado: ' . $certificado
+            'Não encontrei o certificado CA dentro de server/. Coloque o arquivo isrgrootx1.pem nessa pasta. Caminho procurado: ' . $certificado
         );
     }
 
@@ -89,6 +84,45 @@ function obter_conexao(): PDO
 
     $pdo = new PDO($dsn, $usuario, $senha, $opcoes);
     return $pdo;
+}
+
+function caminho_certificado(array $config): string
+{
+    $pastaServer = dirname(__DIR__);
+    $padrao = $pastaServer . '/isrgrootx1.pem';
+
+    $informado = trim((string)($config['ssl_ca'] ?? ''));
+    if ($informado === '') {
+        return $padrao;
+    }
+
+    $normalizado = str_replace('\\', '/', $informado);
+    $absoluto = str_starts_with($normalizado, '/') || preg_match('/^[A-Za-z]:\//', $normalizado) === 1;
+
+    if ($absoluto && is_file($informado)) {
+        return $informado;
+    }
+
+    $relativo = ltrim($normalizado, '/');
+    if (str_starts_with($relativo, 'server/')) {
+        $relativo = substr($relativo, strlen('server/'));
+    }
+
+    $dentroDoServer = $pastaServer . '/' . $relativo;
+    if (is_file($dentroDoServer)) {
+        return $dentroDoServer;
+    }
+
+    $peloNome = $pastaServer . '/' . basename($relativo);
+    if (is_file($peloNome)) {
+        return $peloNome;
+    }
+
+    if (is_file($padrao)) {
+        return $padrao;
+    }
+
+    return $absoluto ? $informado : $dentroDoServer;
 }
 
 function ler_config_local(): array

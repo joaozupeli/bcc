@@ -17,7 +17,7 @@ Não use o XAMPP e não abra o HTML por outro servidor (Live Server, porta 5500)
 
 2. Crie um cluster no [TiDB Cloud](https://tidbcloud.com). Na janela **Connect**, copie host, porta `4000`, usuário e senha. Anote também o caminho do certificado CA (ou baixe o arquivo).
 
-3. No SQL Editor do TiDB Cloud, abra `database/schema.sql`, cole o conteúdo e execute. Isso cria as tabelas `viagens` e `eventos` e alguns roteiros de exemplo. Rodar de novo apaga o que já estiver nessas tabelas.
+3. No SQL Editor do TiDB Cloud, abra `database/schema.sql`, cole o conteúdo e execute. Isso cria as tabelas `viagem` e `evento` e alguns roteiros de exemplo. Rodar de novo apaga o que já estiver nessas tabelas.
 
 4. Copie a configuração e preencha com os seus dados:
 
@@ -77,7 +77,7 @@ O passo 4 não foi feito, ou host/usuário/senha ficaram em branco.
 
 **Categoria nova:** três lugares, com o mesmo identificador (por exemplo `show`):
 
-- `categorias_evento()` em `server/helpers.php`
+- a lista de categorias em `server/api/eventos.php`, dentro de `validar_evento()`
 - a lista `CATEGORIAS` em `client/js/app.js`
 - as cores `--cat-show` nos dois blocos de `client/css/style.css`, mais `.cat-show` e `.icone-cat.cat-show`
 - se quiser um ícone, o objeto `ICONES` em `client/js/ui.js`
@@ -85,9 +85,9 @@ O passo 4 não foi feito, ou host/usuário/senha ficaram em branco.
 **Campo novo no evento:** a ordem prática é esta.
 
 1. Coluna em `database/schema.sql` (e o mesmo `ALTER` no TiDB, se o banco já existir).
-2. `validar_evento()` em `server/helpers.php`.
-3. O `INSERT` e o `UPDATE` em `server/api/eventos.php`, e o `SELECT` de `buscar_evento()` / `listar_eventos_da_viagem()`.
-4. `mapear_evento()` para o JSON incluir o campo.
+2. `validar_evento()` em `server/api/eventos.php`.
+3. O `INSERT`, o `UPDATE` e o `SELECT` em `server/api/eventos.php`.
+4. `formatar_evento()` para o JSON incluir o campo.
 5. O formulário em `criarFormularioEvento()` e o objeto enviado em `salvarEvento()`, ambos em `client/js/app.js`.
 6. Se o campo aparecer no card, `htmlEvento()` no mesmo arquivo.
 

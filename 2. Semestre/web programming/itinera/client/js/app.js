@@ -1,4 +1,4 @@
-// Regras da tela. A validação que vale é a do PHP em server/helpers.php.
+// Regras da tela. A validação que vale é a do PHP em server/api.
 const CATEGORIAS = [
   { valor: 'voo', nome: 'Voo' },
   { valor: 'hospedagem', nome: 'Hospedagem' },
@@ -92,7 +92,7 @@ function aoClicar(evento) {
   const id = alvo.dataset.id;
 
   if (acao === 'abrir-viagem') {
-    abrirViagem(id, { manter: false }).catch((erro) => mostrarToast(erro.message, 'erro'));
+    abrirViagem(id, { manter: false }).catch((erro) => console.log(erro.message));
     return;
   }
   if (acao === 'editar-viagem') {
@@ -171,7 +171,7 @@ async function carregarViagens() {
   } catch (erro) {
     estado.viagens = [];
     alvo.innerHTML = htmlVazio('Não foi possível carregar as viagens.');
-    mostrarToast(erro.message, 'erro');
+    console.log(erro.message);
   }
 }
 
@@ -326,7 +326,7 @@ async function salvarViagem(form, id) {
   const erros = validarViagem(dados);
   if (Object.keys(erros).length > 0) {
     mostrarErros(form, erros);
-    mostrarToast('Verifique os campos destacados.', 'erro');
+    console.log('Verifique os campos destacados.');
     return;
   }
 
@@ -355,7 +355,7 @@ async function salvarViagem(form, id) {
         geral.textContent = erro.message;
       }
     }
-    mostrarToast(erro.message, 'erro');
+    console.log(erro.message);
   } finally {
     travarBotoesModal(false, botoes);
   }
@@ -382,7 +382,7 @@ async function pedirExclusaoViagem(viagem) {
     }
     await carregarViagens();
   } catch (erro) {
-    mostrarToast(erro.message, 'erro');
+    console.log(erro.message);
   }
 }
 
@@ -787,7 +787,7 @@ async function salvarEvento(form, id) {
   const erros = validarEvento(dados);
   if (Object.keys(erros).length > 0) {
     mostrarErros(form, erros);
-    mostrarToast('Verifique os campos destacados.', 'erro');
+    console.log('Verifique os campos destacados.');
     return;
   }
 
@@ -814,7 +814,7 @@ async function salvarEvento(form, id) {
         geral.textContent = erro.message;
       }
     }
-    mostrarToast(erro.message, 'erro');
+    console.log(erro.message);
   } finally {
     travarBotoesModal(false, botoes);
   }
@@ -842,7 +842,7 @@ async function alternarStatus(eventoOrigem, botao) {
     mostrarToast(novo === 'confirmado' ? 'Evento confirmado.' : 'Evento marcado como pendente.', 'sucesso');
     await abrirViagem(estado.viagemAtual.id, { manter: true });
   } catch (erro) {
-    mostrarToast(erro.message, 'erro');
+    console.log(erro.message);
     if (botao && botao.isConnected) {
       botao.disabled = false;
     }
@@ -864,7 +864,7 @@ async function pedirExclusaoEvento(evento) {
     mostrarToast('Evento excluído.', 'sucesso');
     await abrirViagem(estado.viagemAtual.id, { manter: true });
   } catch (erro) {
-    mostrarToast(erro.message, 'erro');
+    console.log(erro.message);
   }
 }
 
