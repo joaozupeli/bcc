@@ -21,5 +21,20 @@
 ### Pastas
 - A pasta foi dividida em `client` (tela) e `server` (PHP). O banco não mudou. O caminho da senha passou a ser `server/config/config.local.php`.
 
-## Pending decision
+## Sistema ciberfísico — janelas Wokwi
+
+### Introduced
+- O aprendiz quer os iframes do Wokwi como janelas do projeto, para o MQTT aparecer ao vivo junto com as simulações.
+
+### Decided
+- Três janelas no `dashboard/index.html`, uma por projeto: CPS1 `480087264328094721`, CPS2 `480087477963940865`, CPS3 `480087507036763137`.
+- Os botões continuam publicando o JSON que cada `main.py` já espera em `cscf/zupeli_vilela_dib/<cps>/comando`.
+
+### Implemented
+- `cscf_mqtt/dashboard/index.html` reescrito com um iframe por sistema, números, botões e o log de mensagens.
+- O CSS foi para `dashboard/style.css` e o JavaScript da página para `dashboard/script.js`. O HTML só liga esses arquivos. A biblioteca mqtt.js continua no HTML, vinda do CDN.
+- Os links “abrir” saíram. O iframe de cada CPS voltou, porque é a janela que mostra o projeto. O título e o painel continuam.
+- A barra do site do Wokwi (logo, Sign in e abas) fica cortada no CSS. O circuito e o botão de play continuam visíveis.
+
+### Pending decision
 None.
