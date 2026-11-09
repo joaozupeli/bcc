@@ -3,7 +3,7 @@ const EQUIPE = params.get("equipe") || "zupeli_vilela_dib";
 const BROKER_URL = params.get("broker") || "wss://broker.hivemq.com:8884/mqtt";
 const BASE = "cscf/" + EQUIPE;
 
-const $ = id => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 const setLed = (id, ligado) => $(id).classList.toggle("on", !!ligado);
 const estado = { alerta: null, janela: null, bomba: null };
 
@@ -13,10 +13,11 @@ if (typeof mqtt === "undefined") {
 }
 
 const cliente = mqtt.connect(BROKER_URL, {
-  clientId: "dashboard-" + EQUIPE + "-" + Math.random().toString(16).slice(2, 8),
+  clientId:
+    "dashboard-" + EQUIPE + "-" + Math.random().toString(16).slice(2, 8),
   reconnectPeriod: 2000,
   connectTimeout: 10000,
-  clean: true
+  clean: true,
 });
 
 cliente.on("connect", () => {
@@ -25,14 +26,22 @@ cliente.on("connect", () => {
   cliente.subscribe(BASE + "/#");
   registrar("sub", BASE + "/#", "");
 });
-cliente.on("reconnect", () => { $("pillConexao").textContent = "reconectando..."; $("pillConexao").className = "pill"; });
-cliente.on("close", () => { $("pillConexao").textContent = "desconectado"; $("pillConexao").className = "pill off"; });
-cliente.on("error", e => registrar("sub", "erro", e.message));
+cliente.on("reconnect", () => {
+  $("pillConexao").textContent = "reconectando...";
+  $("pillConexao").className = "pill";
+});
+cliente.on("close", () => {
+  $("pillConexao").textContent = "desconectado";
+  $("pillConexao").className = "pill off";
+});
+cliente.on("error", (e) => registrar("sub", "erro", e.message));
 cliente.on("message", (topico, payload) => {
   const texto = payload.toString();
   registrar("rx", topico.replace(BASE + "/", ""), texto);
   let dados = texto;
-  try { dados = JSON.parse(texto); } catch (e) {}
+  try {
+    dados = JSON.parse(texto);
+  } catch (e) {}
   tratar(topico.replace(BASE + "/", ""), dados);
 });
 
@@ -53,7 +62,11 @@ function tratar(nome, d) {
     case "cps1/alerta":
       estado.alerta = d.condicao === "CALOR";
       $("alerta1").textContent = estado.alerta
-        ? "CALOR: " + d.temp + " °C (limite " + d.limite + "). CPS 2 abre a janela e CPS 3 irriga mais cedo."
+        ? "CALOR: " +
+          d.temp +
+          " °C (limite " +
+          d.limite +
+          "). CPS 2 abre a janela e CPS 3 irriga mais cedo."
         : "Normal: " + d.temp + " °C (limite " + d.limite + ").";
       atualizarResumo();
       break;
@@ -107,7 +120,7 @@ function atualizarResumo() {
   const partes = [
     estado.alerta ? "CPS 1 em CALOR" : "CPS 1 normal",
     estado.janela ? "janela aberta" : "janela fechada",
-    estado.bomba ? "bomba ligada" : "bomba desligada"
+    estado.bomba ? "bomba ligada" : "bomba desligada",
   ];
   $("resumo").textContent = partes.join("  ·  ");
 }
@@ -116,7 +129,8 @@ function registrar(tipo, topico, texto) {
   const linha = document.createElement("div");
   linha.className = tipo;
   const rotulo = { rx: "recebido ", tx: "enviado  ", sub: "assinou   " }[tipo];
-  linha.textContent = new Date().toLocaleTimeString() + "  " + rotulo + topico + "  " + texto;
+  linha.textContent =
+    new Date().toLocaleTimeString() + "  " + rotulo + topico + "  " + texto;
   const log = $("log");
   log.appendChild(linha);
   while (log.children.length > 80) log.removeChild(log.firstChild);

@@ -1,118 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Estufa — 3 janelas MQTT</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<header>
-  <h1>Estufa — três janelas</h1>
-  <p>Aperte o ▶ dentro de cada janela. Aí o projeto aparece e o MQTT chega aqui.</p>
-  <span class="pill" id="pillConexao">desconectado</span>
-</header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estufa — 3 janelas MQTT</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Estufa — três janelas</h1>
+      <p>
+        Aperte o ▶ dentro de cada janela. Aí o projeto aparece e o MQTT chega
+        aqui.
+      </p>
+      <span class="pill" id="pillConexao">desconectado</span>
+    </header>
 
-<main>
-  <section class="janela">
-    <div class="barra">
-      <strong>CPS 1 — Clima <span class="modo" id="modo1">auto</span></strong>
-      <span class="pill" id="status1">?</span>
-    </div>
-    <div class="simulacao">
-      <iframe title="Simulação do CPS 1" src="https://wokwi.com/projects/480087264328094721"></iframe>
-    </div>
-    <div class="painel">
-      <div class="medidas">
-        <div class="medida"><b id="temp">--</b><span>°C</span></div>
-        <div class="medida"><b id="umid">--</b><span>umidade %</span></div>
-        <div class="medida"><b id="limite1">--</b><span>limite °C</span></div>
-      </div>
-      <div class="atuadores">
-        <span class="led" id="ledAlerta"><i></i>LED alerta</span>
-        <span class="led" id="ledIrrig"><i></i>LED azul (bomba do CPS 3)</span>
-      </div>
-      <div class="motivo" id="alerta1">Aguardando o CPS 1...</div>
-      <div class="controles">
-        <button onclick="enviar('cps1', {led_alerta:'on'})">LED alerta ON</button>
-        <button class="claro" onclick="enviar('cps1', {led_alerta:'off'})">OFF</button>
-        <button class="auto" onclick="enviar('cps1', {modo:'auto'})">Automático</button>
-        <input type="number" id="inLimite1" value="30" min="0" max="60">
-        <button onclick="enviar('cps1', {limite: Number(document.getElementById('inLimite1').value)})">Limite</button>
-      </div>
-    </div>
-  </section>
+    <main>
+      <section class="janela">
+        <div class="barra">
+          <strong
+            >CPS 1 — Clima <span class="modo" id="modo1">auto</span></strong
+          >
+          <span class="pill" id="status1">?</span>
+        </div>
+        <div class="simulacao">
+          <iframe
+            title="Simulação do CPS 1"
+            src="https://wokwi.com/projects/480087264328094721"
+          ></iframe>
+        </div>
+        <div class="painel">
+          <div class="medidas">
+            <div class="medida"><b id="temp">--</b><span>°C</span></div>
+            <div class="medida"><b id="umid">--</b><span>umidade %</span></div>
+            <div class="medida">
+              <b id="limite1">--</b><span>limite °C</span>
+            </div>
+          </div>
+          <div class="atuadores">
+            <span class="led" id="ledAlerta"><i></i>LED alerta</span>
+            <span class="led" id="ledIrrig"
+              ><i></i>LED azul (bomba do CPS 3)</span
+            >
+          </div>
+          <div class="motivo" id="alerta1">Aguardando o CPS 1...</div>
+          <div class="controles">
+            <button onclick="enviar('cps1', { led_alerta: 'on' })">
+              LED alerta ON
+            </button>
+            <button
+              class="claro"
+              onclick="enviar('cps1', { led_alerta: 'off' })"
+            >
+              OFF
+            </button>
+            <button class="auto" onclick="enviar('cps1', { modo: 'auto' })">
+              Automático
+            </button>
+            <input type="number" id="inLimite1" value="30" min="0" max="60" />
+            <button
+              onclick="
+                enviar('cps1', {
+                  limite: Number(document.getElementById('inLimite1').value),
+                })
+              "
+            >
+              Limite
+            </button>
+          </div>
+        </div>
+      </section>
 
-  <section class="janela">
-    <div class="barra">
-      <strong>CPS 2 — Janela e luz <span class="modo" id="modo2">auto</span></strong>
-      <span class="pill" id="status2">?</span>
-    </div>
-    <div class="simulacao">
-      <iframe title="Simulação do CPS 2" src="https://wokwi.com/projects/480087477963940865"></iframe>
-    </div>
-    <div class="painel">
-      <div class="medidas">
-        <div class="medida"><b id="luz">--</b><span>luz %</span></div>
-        <div class="medida"><b id="periodo">--</b><span>período</span></div>
-        <div class="medida"><b id="janela">--</b><span>janela</span></div>
-      </div>
-      <div class="atuadores">
-        <span class="led" id="ledJanela"><i></i>Janela aberta</span>
-        <span class="led" id="ledLuz"><i></i>Iluminação</span>
-      </div>
-      <div class="motivo" id="motivo2">Aguardando o CPS 2...</div>
-      <div class="controles">
-        <button onclick="enviar('cps2', {janela:'abrir'})">Abrir janela</button>
-        <button class="claro" onclick="enviar('cps2', {janela:'fechar'})">Fechar</button>
-        <button onclick="enviar('cps2', {luz:'on'})">Luz ON</button>
-        <button class="claro" onclick="enviar('cps2', {luz:'off'})">OFF</button>
-        <button class="auto" onclick="enviar('cps2', {modo:'auto'})">Automático</button>
-      </div>
-    </div>
-  </section>
+      <section class="janela">
+        <div class="barra">
+          <strong
+            >CPS 2 — Janela e luz
+            <span class="modo" id="modo2">auto</span></strong
+          >
+          <span class="pill" id="status2">?</span>
+        </div>
+        <div class="simulacao">
+          <iframe
+            title="Simulação do CPS 2"
+            src="https://wokwi.com/projects/480087477963940865"
+          ></iframe>
+        </div>
+        <div class="painel">
+          <div class="medidas">
+            <div class="medida"><b id="luz">--</b><span>luz %</span></div>
+            <div class="medida"><b id="periodo">--</b><span>período</span></div>
+            <div class="medida"><b id="janela">--</b><span>janela</span></div>
+          </div>
+          <div class="atuadores">
+            <span class="led" id="ledJanela"><i></i>Janela aberta</span>
+            <span class="led" id="ledLuz"><i></i>Iluminação</span>
+          </div>
+          <div class="motivo" id="motivo2">Aguardando o CPS 2...</div>
+          <div class="controles">
+            <button onclick="enviar('cps2', { janela: 'abrir' })">
+              Abrir janela
+            </button>
+            <button
+              class="claro"
+              onclick="enviar('cps2', { janela: 'fechar' })"
+            >
+              Fechar
+            </button>
+            <button onclick="enviar('cps2', { luz: 'on' })">Luz ON</button>
+            <button class="claro" onclick="enviar('cps2', { luz: 'off' })">
+              OFF
+            </button>
+            <button class="auto" onclick="enviar('cps2', { modo: 'auto' })">
+              Automático
+            </button>
+          </div>
+        </div>
+      </section>
 
-  <section class="janela">
-    <div class="barra">
-      <strong>CPS 3 — Irrigação <span class="modo" id="modo3">auto</span></strong>
-      <span class="pill" id="status3">?</span>
-    </div>
-    <div class="simulacao">
-      <iframe title="Simulação do CPS 3" src="https://wokwi.com/projects/480087507036763137"></iframe>
-    </div>
-    <div class="painel">
-      <div class="medidas">
-        <div class="medida"><b id="solo">--</b><span>solo %</span></div>
-        <div class="medida"><b id="limBase">--</b><span>limite base</span></div>
-        <div class="medida"><b id="limEf">--</b><span>limite efetivo</span></div>
-      </div>
-      <div class="atuadores">
-        <span class="led" id="ledBomba"><i></i>Bomba</span>
-      </div>
-      <div class="motivo" id="motivo3">Aguardando o CPS 3...</div>
-      <div class="controles">
-        <button onclick="enviar('cps3', {bomba:'on'})">Bomba ON</button>
-        <button class="claro" onclick="enviar('cps3', {bomba:'off'})">OFF</button>
-        <button class="auto" onclick="enviar('cps3', {modo:'auto'})">Automático</button>
-        <input type="number" id="inLimite3" value="30" min="0" max="100">
-        <button onclick="enviar('cps3', {limite_solo: Number(document.getElementById('inLimite3').value)})">Limite</button>
-      </div>
-    </div>
-  </section>
-</main>
+      <section class="janela">
+        <div class="barra">
+          <strong
+            >CPS 3 — Irrigação <span class="modo" id="modo3">auto</span></strong
+          >
+          <span class="pill" id="status3">?</span>
+        </div>
+        <div class="simulacao">
+          <iframe
+            title="Simulação do CPS 3"
+            src="https://wokwi.com/projects/480087507036763137"
+          ></iframe>
+        </div>
+        <div class="painel">
+          <div class="medidas">
+            <div class="medida"><b id="solo">--</b><span>solo %</span></div>
+            <div class="medida">
+              <b id="limBase">--</b><span>limite base</span>
+            </div>
+            <div class="medida">
+              <b id="limEf">--</b><span>limite efetivo</span>
+            </div>
+          </div>
+          <div class="atuadores">
+            <span class="led" id="ledBomba"><i></i>Bomba</span>
+          </div>
+          <div class="motivo" id="motivo3">Aguardando o CPS 3...</div>
+          <div class="controles">
+            <button onclick="enviar('cps3', { bomba: 'on' })">Bomba ON</button>
+            <button class="claro" onclick="enviar('cps3', { bomba: 'off' })">
+              OFF
+            </button>
+            <button class="auto" onclick="enviar('cps3', { modo: 'auto' })">
+              Automático
+            </button>
+            <input type="number" id="inLimite3" value="30" min="0" max="100" />
+            <button
+              onclick="
+                enviar('cps3', {
+                  limite_solo: Number(
+                    document.getElementById('inLimite3').value,
+                  ),
+                })
+              "
+            >
+              Limite
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
 
-<footer>
-  <div class="linha">
-    <span id="resumo">Aguardando os três CPS...</span>
-    <details>
-      <summary>mensagens MQTT</summary>
-      <div id="log"></div>
-    </details>
-  </div>
-</footer>
+    <footer>
+      <div class="linha">
+        <span id="resumo">Aguardando os três CPS...</span>
+        <details>
+          <summary>mensagens MQTT</summary>
+          <div id="log"></div>
+        </details>
+      </div>
+    </footer>
 
-<script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
-<script>if (typeof mqtt === "undefined") document.write('<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"><\/script>');</script>
-<script src="script.js"></script>
-</body>
+    <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+    <script>
+      if (typeof mqtt === "undefined")
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"><\/script>',
+        );
+    </script>
+    <script src="script.js"></script>
+  </body>
 </html>
